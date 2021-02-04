@@ -16,6 +16,9 @@ export default function App() {
   const [pipesRandomHeigh2, setPipesRandomHeigh2] = useState(0)
   const [isGameOver, setIsGameOver]               = useState(false)
   const [score, setScore]                         = useState(10)
+  const [frames, setFrame] = useState(frame1)
+  const [rotation, setRotation]                   = useState('0deg')
+  const [counter, setCounter] = useState(0);
 
   const pipeWidth = 60
   const pipeHeight = 300
@@ -32,15 +35,35 @@ export default function App() {
   const frame2 = require('./assets/flappy-bird-assets/PNG/frame-2.png')
   const frame3 = require('./assets/flappy-bird-assets/PNG/frame-3.png')
   const frame4 = require('./assets/flappy-bird-assets/PNG/frame-4.png')
-  const framer = [frame1, frame2, frame3, frame4]
-  const [frames, setFrame] = useState(frame1)
+  const framer = [frame1, frame1, frame2, frame3, frame4]
+  const rotor  = ['0deg', '1deg', '2deg', '3deg', '4deg', '5deg', '6deg',
+                  '7deg', '8deg', '9deg', '10deg', '11deg', '12deg', '13deg',
+                  '14deg', '15deg', '16deg', '17deg', '18deg', '19deg', '20deg',
+                  '21deg', '22deg', '23deg', '24deg', '25deg', '26deg', '27deg',
+                  '28deg', '29deg', '30deg', '31deg', '32deg', '33deg', '34deg', 
+                  '35deg', '36deg', '37deg', '38deg', '39deg', '40deg', '41deg',
+                  '42deg', '43deg', '44deg', '45deg' ]
+  
 
 
   //makes the bird start to falling down
+  let x
+
   useEffect(()=>{
     if (birdBottom > 0) {
       gameTimerId = setInterval(() => {
         setBirdBottom(birdBottom => birdBottom - gravity)
+        x = Math.floor(Math.random() * 5)
+
+        setFrame(framer[x])
+        
+        setRotation(rotor[counter])
+        setCounter(counter + 1)
+        if(counter > 44){
+          setCounter(0)
+        }
+       
+        //console.log('frame: ' + framer[x])
       }, 30);
 
       return () => {
@@ -53,33 +76,6 @@ export default function App() {
 // makes the bird animation
 
 
-//let x = Math.floor(Math.random() * 4)
-let x = 0
-useEffect(()=>{
-  
-  if (birdBottom > 0) {
-    birdAnimation = setInterval(() => {
-      
-      setFrame(framer[x])
-      x = x + 1
-      console.log(x)
-      console.log(isGameOver)
-      if(x > 2){
-        x = 0
-      }     
-    }, 300);
-    
-    return () => {
-      clearInterval(birdAnimation)
-      
-    } 
-  }
-
-}, [birdBottom])
-
-
-
-
 
 
 // makes the bird tries to fly
@@ -88,6 +84,8 @@ useEffect(()=>{
     if(! isGameOver && birdBottom < screenHeight){
       setBirdBottom(birdBottom => birdBottom + 50)
       setScore(score => score + 10)
+      setRotation('320deg')
+
     }
   }
   const restart = () => { 
@@ -185,6 +183,7 @@ console.log('Esse é o tamanho do GAP: ' + gap)*/
         birdBottom={birdBottom}
         birdLeft={birdLeft}
         frames={frames}
+        rotatation={rotation}
       
       />
       <Pipes
