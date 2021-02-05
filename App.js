@@ -63,7 +63,7 @@ export default function App() {
           setCounter(0)
         }
        
-        //console.log('frame: ' + framer[x])
+        
       }, 30);
 
       return () => {
@@ -149,7 +149,7 @@ export default function App() {
         )
         ) 
         {
-        console.log('game over')
+        
         gameOver()
       }
     })
@@ -161,18 +161,6 @@ export default function App() {
     setIsGameOver(true)
   }
 
-/*console.log('________________________________')
-console.log('Largura da Tela: ' + screenWidth)
-console.log('Altura da Tela: ' + screenHeight)
-console.log('Esquerda do pássaro: ' + birdLeft)
-console.log('Pezinho do pásaro: ' + birdBottom)
-console.log('Cano um para a esquerda: ' + pipesToLeft)
-console.log('Cano dois para a esquerda: ' + pipesToLeft2)
-console.log('^ aq encerra o movimento do cano e bird')
-console.log('Tamanho aleatório do cano 1  300px e + : ' + pipesRandomHeigh)
-console.log('Tamanho aleatório do cano 2  300px e + : ' + pipesRandomHeigh2)
-console.log('Esse é o tamanho do GAP: ' + gap)*/
-//console.log(gameTimerId)
 
 
   return (
