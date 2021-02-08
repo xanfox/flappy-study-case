@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {  Dimensions, StyleSheet, View,Text, Button, TouchableWithoutFeedback } from 'react-native';
+import {  Dimensions, StyleSheet, View,Text, Button, TouchableWithoutFeedback, Image } from 'react-native';
 
 import Bird from './src/components/Bird'
 import Pipes from './src/components/Pipes'
 
+
 export default function App() {
-  const screenWidth = Dimensions.get('screen').width
+  const screenWidth = Math.floor( Dimensions.get('screen').width )
   const screenHeight = Dimensions.get('screen').height
   const birdLeft = screenWidth / 2
 
@@ -16,9 +17,11 @@ export default function App() {
   const [pipesRandomHeigh2, setPipesRandomHeigh2] = useState(0)
   const [isGameOver, setIsGameOver]               = useState(false)
   const [score, setScore]                         = useState(10)
-  const [frames, setFrame] = useState(frame1)
+  const [frames, setFrame]                        = useState(frame1)
   const [rotation, setRotation]                   = useState('0deg')
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter]                     = useState(0);
+  const [cnt, setCnt]                             = useState(0)
+  const [moveBackground, setMoveBackground]       = useState( 0 )
 
   const pipeWidth = 60
   const pipeHeight = 300
@@ -31,41 +34,49 @@ export default function App() {
   let pipesToLeftLoop2
 
   //variavis usadas nas animações
+  const backgroundImg = require('./assets/background/forest.png')
   const frame1 = require('./assets/flappy-bird-assets/PNG/frame-1.png')
   const frame2 = require('./assets/flappy-bird-assets/PNG/frame-2.png')
   const frame3 = require('./assets/flappy-bird-assets/PNG/frame-3.png')
   const frame4 = require('./assets/flappy-bird-assets/PNG/frame-4.png')
   const framer = [frame1, frame1, frame2, frame3, frame4]
-  const rotor  = ['0deg', '1deg', '2deg', '3deg', '4deg', '5deg', '6deg',
+  /*const rotor  = ['0deg', '1deg', '2deg', '3deg', '4deg', '5deg', '6deg',
                   '7deg', '8deg', '9deg', '10deg', '11deg', '12deg', '13deg',
                   '14deg', '15deg', '16deg', '17deg', '18deg', '19deg', '20deg',
                   '21deg', '22deg', '23deg', '24deg', '25deg', '26deg', '27deg',
                   '28deg', '29deg', '30deg', '31deg', '32deg', '33deg', '34deg', 
                   '35deg', '36deg', '37deg', '38deg', '39deg', '40deg', '41deg',
-                  '42deg', '43deg', '44deg', '45deg' ]
+                  '42deg', '43deg', '44deg', '45deg' ] */
+  const rotor = ['0deg', '5deg', '10deg', '15deg', '20deg', '25deg', '30deg' ]
   
 
 
   //makes the bird start to falling down
-  let x
-
   useEffect(()=>{
     if (birdBottom > 0) {
       gameTimerId = setInterval(() => {
         setBirdBottom(birdBottom => birdBottom - gravity)
-        x = Math.floor(Math.random() * 5)
+        
 
-        setFrame(framer[x])
+        setFrame(framer[cnt])
+        setCnt(cnt => cnt + 1)
+        if (cnt > 2) {
+          setCnt(0)
+        }
         
         setRotation(rotor[counter])
         setCounter(counter + 1)
-        if(counter > 44){
+        if(counter >  5){
           setCounter(0)
         }
-       
+        
+
         
       }, 30);
-
+      setMoveBackground(moveBackground => moveBackground - 7)
+      if (moveBackground <   - screenWidth / 100 * 156) {
+        setMoveBackground(  screenWidth * 2  )
+      }
       return () => {
         clearInterval(gameTimerId)
       } 
@@ -164,8 +175,27 @@ export default function App() {
 
 
   return (
+    
+    <>
+
     <TouchableWithoutFeedback onPress={fly}>
+      
+    
       <View style={styles.container}>
+      <Image
+          source={backgroundImg}
+          style={{
+            
+            left:   moveBackground,
+            height: screenHeight / 100 * 80,
+            width: screenWidth / 100 * 555
+
+            
+            
+          }}
+
+          />
+          
       {isGameOver && <Button title='Game Over: Restart' onPress={restart}/> }
       <Bird
         birdBottom={birdBottom}
@@ -191,9 +221,17 @@ export default function App() {
         color={'yellow'}
         randomBottom={pipesRandomHeigh2}
       />
-      <Text>{score}</Text>  
+      <Text>{score}</Text>
+      <Text>Moving background: {moveBackground}</Text>
+      <Text>Screen Width: { screenWidth }</Text>
+
     </View>
     </TouchableWithoutFeedback>
+    
+    </>
+   
+
+    
   )
 }
 
@@ -204,5 +242,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#986',
     alignItems: 'center',
     justifyContent: 'center',
+    //zIndex: 100,
+    //position: 'absolute'
+    
+    
   },
+  background:{
+
+  }
 })
